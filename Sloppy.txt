@@ -1,0 +1,61 @@
+> #####Read Data From Text File#####
+
+> TaxEvaders <- 
++   read.table("C:/Users/user/Desktop/School/Stats/Data_TaxEvaders.csv", header=TRUE,
++    sep=",", na.strings=c("", "NA"), dec=".", fill=TRUE, quote="\"", 
++   strip.white=TRUE)
+
+> TaxEvaders <- 
++   read.table("C:/Users/user/Desktop/School/Stats/Data_TaxEvaders.csv", header=TRUE,
++    sep=",", na.strings=c("", "NA"), dec=".", fill=TRUE, quote="\"", 
++   strip.white=TRUE)
+
+> library(tcltk, pos=15)
+
+> #####Numerical summaries#####
+
+> res <- numSummary(TaxEvaders[,c("Hours.Radio", "Hours.TV")], 
++   statistics=c("mean", "sd", "quantiles"), quantiles=c(0,.25,.5,.75,1))
+
+> colnames(res$table)[1:2] <- gettext(domain="R-RcmdrPlugin.EZR", 
++   colnames(res$table)[1:2])
+
+> res
+                mean       sd 0% 25% 50%  75% 100%  n
+Hours.Radio 1.795918 1.598706  0   1   1 2.00    6 98
+Hours.TV    2.540816 1.675588  0   1   2 3.75    6 98
+
+> remove(res)
+
+> #####Test for Pearson's correlation#####
+
+> windows(width=7, height=7); par(lwd=1, las=1, family="sans", cex=1, 
++   mgp=c(3.0,1,0))
+
+> scatterplot(Hours.Radio~Hours.TV, reg.line=lm, smooth=FALSE, spread=FALSE, 
++   boxplots='xy', span=0.5, data=TaxEvaders)
+
+> (res <- cor.test(TaxEvaders$Hours.Radio, TaxEvaders$Hours.TV, 
++   alternative="two.sided", method="pearson"))
+
+	Pearson's product-moment correlation
+
+data:  TaxEvaders$Hours.Radio and TaxEvaders$Hours.TV
+t = -1.339, df = 96, p-value = 0.1837
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.32509120  0.06475588
+sample estimates:
+       cor 
+-0.1354047 
+
+
+> cat(gettext(domain="R-RcmdrPlugin.EZR", "correlation coefficient"), " = ", 
++   signif(res$estimate, digits=3), ", ", gettext(domain="R-RcmdrPlugin.EZR", 
++   "95% CI"), " ", signif(res$conf.int[1],digits=3), "-", 
++   signif(res$conf.int[2],digits=3), ", ", gettext(domain="R-RcmdrPlugin.EZR", 
++   "p.value"), " = ", signif(res$p.value, digits=3), "
++ ", sep="")
+correlation coefficient = -0.135, 95% CI -0.325-0.0648, p.value = 0.184
+
+> remove(res)
